@@ -27,13 +27,7 @@ function readLine() {
 
 // Complete the saveThePrisoner function below.
 function saveThePrisoner(n, m, s) {
-  let result = (m % n) + (s - 1);
-  if (result > n) {
-    result = result % n;
-  } else if (result === 0) {
-    result = n;
-  }
-  return result;
+  return ((m + s - 2) % n) + 1;
 }
 
 function main() {

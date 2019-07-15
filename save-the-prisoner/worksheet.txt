@@ -1,29 +1,132 @@
-n = 4
-m = 4
-1 2 3 4 = s
-0 1 2 3 = s - 1
-4 1 2 3 = (s - 1) + 4
+We need a value between 1 thru n
+
+Concepts
+========
+
+Concept #1
+----------
+To denote a range of all numbers between two numbers, we use paranthesis/brackets.
+Sqaure brackets [] means the number on the edge is included in the range.
+Common brackets () means the number on the edge is excluded from the range.
+[n, m] denotes all numbers between n and m, including n and m, i.e. n, n+1, n+2, ..., m-2, m-1, m
+(n, m) denotes all numbers between n and m, excluding n and m, i.e. n+1, n+2, ..., m-2, m-1
+[n, m) denotes all numbers between n and m, including n and excluding m, i.e. n, n+1, n+2, ..., m-2, m-1
+(n, m] denotes all numbers between n and m, excluding n and including m, i.e. n+1, n+2, ..., m-2, m-1, m
+
+For example,
+[0, 5] represents 0, 1, 2, 3, 4, 5
+(0, 5) represents 1, 2, 3, 4
+[0, 5) represents 0, 1, 2, 3, 4
+(0, 5] represents 1, 2, 3, 4, 5
 
 
-n < m:
-4 6 1: 1 2 3 4 1 2 = (2 + 0) % 4 = 2     4 - 1 = 3
-4 6 2: 2 3 4 1 2 3 = (2 + 1) % 4 = 3     4 - 2 = 2
-4 6 3: 3 4 1 2 3 4 = (2 + 2) % 4 = 4     4 - 3 = 1
-4 6 4: 4 1 2 3 4 1 = (2 + 3) % 4 = 1     4 - 4 = 0
+Concept #2
+----------
+% = remainder/modulus/modulo (mod) operator
+Any number (y % n) yields a number in the range [0, n).
+For example, (y % 5) = 0, 1, 2, 3 or 4 = [0, 5)
 
-n > m: 6 4
-6 4 1: 1 2 3 4 = 4 + 0 = 4
-6 4 2: 2 3 4 5 = 4 + 1 = 5
-6 4 3: 3 4 5 6 = 4 + 2 = 6
-6 4 4: 4 5 6 1 = 4 + 3 = 7 = 1
-6 4 5: 5 6 1 2 = 4 + 4 = 8 = 2
-6 4 6: 6 1 2 3 = 4 + 5 = 9 = 3
+In order to get a number in the range (0, n], we'll need to add 1 to the result of (y % n).
+For example, (y % 5) + 1 = 1, 2, 3, 4 or 5 = (0, 5]
 
-n = m: 5 5
-5 5 1: 1 2 3 4 5 = 0 + 0 = 0 // Actual 5
-5 5 2: 2 3 4 5 1 = 0 + 1 = 1
-5 5 3: 3 4 5 1 2 = 0 + 2 = 2
-5 5 4: 4 5 1 2 3 = 0 + 3 = 3
-5 5 5: 5 1 2 3 4 = 0 + 4 = 4
 
-n - s
+Concept #3
+----------
+Negative numbers can be on the left of the mod operator too.
+-1 % n = (n - 1)
+
+For example,
+-1 % 5 = 4
+-2 % 5 = 3
+-3 % 5 = 2
+-4 % 5 = 1
+-5 % 5 = 0
+-6 % 5 = 4
+-7 % 5 = 3
+... and so on.
+
+Output is still in the range [0, n)
+
+
+Assumption
+==========
+n = number of prisoners
+m = number of sweets
+s = starting chair for sweet distribution. It is in the range (0, n]
+e = expected end seat number
+
+
+Theory
+======
+The result will always be a number [1, n] or (0, n].
+So, the formula should be:
+e = ( y % n ) + 1
+
+where, y = some expression involving m (and perhaps s and/or n)
+
+Now, in order to find `y`, we did some trial and error.
+
+Assuming sweet distribution started at prisoner/seat 1:
+If y = m,     e evaluates to the prisoner after the prisoner who got the last sweet
+If y = m - 1, e evaluates to the prisoner who got the last sweet
+
+So, in order to find out how to fit `s` into this expression, we start adding numbers into this mix:
+y = (m)     - 1 yields the prisoner who got the last sweet, if distribution started at seat 1
+y = (m + 1) - 1 yields the prisoner who got the last sweet, if distribution started at seat 2
+y = (m + 2) - 1 yields the prisoner who got the last sweet, if distribution started at seat 3
+y = (m + 3) - 1 yields the prisoner who got the last sweet, if distribution started at seat 4
+
+We start to notice a pattern here
+   y = m + (s - 1) - 1
+=> y = m + s - 2
+
+Hence, the full expression for the expected prisoner to receive the last sweet is:
+   e = ( y % n ) + 1
+=> e = ( (m + s - 2) % n ) + 1
+
+
+Scenarios
+=========
+
+n > m
+=====
+n = 6, m = 4
+============
+n  m  s  e    (m + s - 2) = y    (y % n) = k    (k + 1) = e
+-  -  -  -   ----------------    -----------    -----------
+6  4  1  4    (4 + 1 - 2) = 3    (3 % 6) = 3    (3 + 1) = 4
+6  4  2  5    (4 + 2 - 2) = 4    (4 % 6) = 4    (4 + 1) = 5
+6  4  3  6    (4 + 3 - 2) = 5    (5 % 6) = 5    (5 + 1) = 6
+6  4  4  1    (4 + 4 - 2) = 6    (6 % 6) = 0    (0 + 1) = 1
+6  4  5  2    (4 + 5 - 2) = 7    (7 % 6) = 1    (1 + 1) = 2
+6  4  6  3    (4 + 6 - 2) = 8    (8 % 6) = 2    (2 + 1) = 3
+
+
+n < m
+=====
+n = 4, m = 6
+============
+n  m  s  e    (m + s - 2) = y    (y % n) = k    (k + 1) = e
+-  -  -  -    ---------------    -----------    -----------
+4  6  1  2    (6 + 1 - 2) = 5    (5 % 4) = 1    (1 + 1) = 2
+4  6  2  3    (6 + 2 - 2) = 6    (6 % 4) = 2    (2 + 1) = 3
+4  6  3  4    (6 + 3 - 2) = 7    (7 % 4) = 3    (3 + 1) = 4
+4  6  4  1    (6 + 4 - 2) = 8    (8 % 4) = 0    (0 + 1) = 1
+
+
+n = m
+=====
+n = 5, m = 5
+============
+n  m  s  e    (m + s - 2) = y    (y % n) = k    (k + 1) = e
+-  -  -  -    ---------------    -----------    -----------
+5  5  1  5    (5 + 1 - 2) = 4    (4 % 5) = 4    (4 + 1) = 5
+5  5  2  1    (5 + 2 - 2) = 5    (5 % 5) = 0    (0 + 1) = 1
+5  5  3  2    (5 + 3 - 2) = 6    (6 % 5) = 1    (1 + 1) = 2
+5  5  4  3    (5 + 4 - 2) = 7    (7 % 5) = 2    (2 + 1) = 3
+5  5  5  4    (5 + 5 - 2) = 8    (8 % 5) = 3    (3 + 1) = 4
+
+
+Conclusion
+==========
+e = [ (m + s - 2) % n ] + 1

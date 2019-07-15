@@ -21,14 +21,14 @@ let inputString = [
 let currentLine = 0;
 
 // Complete the saveThePrisoner function below.
+/**
+ * The function to find the prisoner who receives the last sweet
+ * @param {number} n The number of prisoners
+ * @param {number} m The number of sweets
+ * @param {number} s The chair number to begin passing out sweets from
+ */
 function saveThePrisoner(n, m, s) {
-  let result = (m % n) + (s - 1);
-  if (result > n) {
-    result = result % n;
-  } else if (result === 0) {
-    result = n;
-  }
-  return result;
+  return ((m + s - 2) % n) + 1;
 }
 
 function readLine() {
