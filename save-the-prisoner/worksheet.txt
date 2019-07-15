@@ -60,7 +60,7 @@ Theory
 ======
 The result will always be a number [1, n] or (0, n].
 So, the formula should be:
-e = ( y % n ) + 1
+e = ( y % n ) + 1    ... let's call this expression exp1
 
 where, y = some expression involving m (and perhaps s and/or n)
 
@@ -80,9 +80,10 @@ We start to notice a pattern here
    y = m + (s - 1) - 1
 => y = m + s - 2
 
-Hence, the full expression for the expected prisoner to receive the last sweet is:
+By replacing this value of y in our earlier expression for e (see expression exp1),
+the full expression for the expected prisoner to receive the last sweet is:
    e = ( y % n ) + 1
-=> e = ( (m + s - 2) % n ) + 1
+=> e = ( (m + s - 2) % n ) + 1   ... let's call this expression exp2
 
 
 Scenarios
@@ -129,4 +130,5 @@ n  m  s  e    (m + s - 2) = y    (y % n) = k    (k + 1) = e
 
 Conclusion
 ==========
+Expression exp2 is our solution:
 e = [ (m + s - 2) % n ] + 1
